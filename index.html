@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>University Database Manager</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f4f7fb;
+        }
+
+        h2 {
+            color: #1d4ed8;
+        }
+
+        button {
+            padding: 12px;
+            margin: 5px;
+            cursor: pointer;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        #output {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border: 1px solid #ccc;
+            min-height: 150px;
+            line-height: 1.8;
+        }
+
+        .status {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h2>University Database Manager</h2>
+
+    <p>All modules use one shared database manager.</p>
+
+    <p id="status" class="status">
+        Database Manager: Not Created
+    </p>
+
+    <!-- Student Module -->
+    <button onclick="studentModule()">
+        Student Module
+    </button>
+
+    <!-- Faculty Module -->
+    <button onclick="facultyModule()">
+        Faculty Module
+    </button>
+
+    <!-- Examination Module -->
+    <button onclick="examModule()">
+        Examination Module
+    </button>
+
+    <!-- Output Area -->
+    <div id="output">
+        Click any module button to start.
+    </div>
+
+
+    <script>
+
+        // SINGLETON DATABASE MANAGER
+
+        const DatabaseManager = (function () {
+
+            // Private variable storing the single instance
+            let instance;
+
+            // Function to create database manager
+            function createInstance() {
+
+                return {
+
+                    // Simulate database operation
+                    query: function (sql) {
+
+                        display("Executing: " + sql);
+
+                    }
+
+                };
+
+            }
+
+            // Public interface of Singleton
+            return {
+
+                // Method to access database manager
+                getInstance: function () {
+
+                    // Check whether instance exists
+                    if (!instance) {
+
+                        // Create instance only once
+                        instance = createInstance();
+
+                        display("New Database Manager Created");
+
+                        document.getElementById("status").innerText =
+                            "Database Manager: 1 Shared Instance";
+
+                    }
+
+                    else {
+
+                        // Reuse existing instance
+                        display("Existing Database Manager Reused");
+
+                    }
+
+                    // Return the same object
+                    return instance;
+
+                }
+
+            };
+
+        })();
+
+
+        // STUDENT MODULE
+
+        function studentModule() {
+
+            // Obtain Singleton instance
+            const db = DatabaseManager.getInstance();
+
+            // Execute student query
+            db.query("SELECT * FROM Students");
+
+        }
+
+
+        // FACULTY MODULE
+
+        function facultyModule() {
+
+            // Obtain same Singleton instance
+            const db = DatabaseManager.getInstance();
+
+            // Execute faculty query
+            db.query("SELECT * FROM Faculty");
+
+        }
+
+
+        // EXAMINATION MODULE
+
+        function examModule() {
+
+            // Obtain same Singleton instance
+            const db = DatabaseManager.getInstance();
+
+            // Execute examination query
+            db.query("SELECT * FROM Exams");
+
+        }
+
+
+        // FUNCTION TO DISPLAY MESSAGES
+
+        function display(message) {
+
+            const output = document.getElementById("output");
+
+            // Remove initial message
+            if (output.textContent.trim() ===
+                "Click any module button to start.") {
+
+                output.innerHTML = "";
+
+            }
+
+            // Create new message
+            const div = document.createElement("div");
+
+            div.textContent = message;
+
+            output.appendChild(div);
+
+        }
+
+    </script>
+
+</body>
+
+</html>
